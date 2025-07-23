@@ -69,6 +69,7 @@ pipeline {
                         sh 'git add package.json'
                         sh 'git commit -m "Bump version to ${IMAGE_TAG}"'
                         sh 'git remote set-url origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/AbdelrahmanElshahat/Eyego-task.git'
+                        sh 'git pull --rebase origin main'
                         sh 'git push origin HEAD:main'
                     }
                 }
