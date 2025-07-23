@@ -5,11 +5,28 @@ pipeline {
     tools {
         nodejs('24.4.1') 
     }
+    environment {
+        DOCKER_REPO_SERVER = '987250612363.dkr.ecr.eu-north-1.amazonaws.com'
+        DOCKER_REPO = '987250612363.dkr.ecr.eu-north-1.amazonaws.com/eyegotask'
+    }
     stages {
+        stage('increament version') {
+            steps {
+                script {
+                    echo 'increamenting version...'
+                    sh 'npm version patch'
+                    def packageJson = readJSON file: 'package.json'
+                    def version = packageJson.version
+                    env.IMAGE_TAG = version
+                    echo "New version: ${version}"
+                }
+            }
+        }
         stage('build app') {
             steps {
                script {
-                   sh 'npm install'
+                        echo "building the application..."
+                        sh 'npm clean install'
                }
             }
         }
@@ -17,6 +34,12 @@ pipeline {
             steps {
                 script {
                     echo "building the docker image..."
+                    withCredentials([usernamePassword(credentialsId: 'ecr-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "docker build -t eyegotask . "
+                        sh "docker tag eyegotask:latest ${DOCKER_REPO}:${IMAGE_TAG}"
+                        sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin ${DOCKER_REPO_SERVER}"
+                        sh "docker push ${DOCKER_REPO}:${IMAGE_TAG}"
+                    }
                 }
             }
         }
@@ -24,11 +47,24 @@ pipeline {
             environment {
                AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
                AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
+               APP_NAME = 'eyegoApi'
             }
             steps {
                 script {
-                   echo 'deploying docker image...'
-                   sh 'kubectl apply -f kubernetes/api.yaml'
+                   echo 'deploying docker image...' 
+                   sh 'envsubst < kubernetes/api.yaml | kubectl apply -f -'
+                }
+            }
+        }
+        stage('commit version update') {
+            steps {
+                script {
+                    echo 'committing version...'
+                    sh 'git config user.name "jenkins"'
+                    sh 'git config user.email "jenkins@example.com"'
+                    sh 'git add package.json'
+                    sh 'git commit -m "Bump version to ${IMAGE_TAG}"'
+                    sh 'git push'
                 }
             }
         }

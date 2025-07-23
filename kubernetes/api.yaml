@@ -1,23 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  task
+  name:  ${APP_NAME}
   namespace: default
   labels:
-    app:  task
+    app:  ${APP_NAME}
 spec:
   selector:
     matchLabels:
-      app: task
+      app: ${APP_NAME}
   replicas: 2
   template:
     metadata:
       labels:
-        app:  task
+        app:  ${APP_NAME}
     spec:
+      imagePullSecrets:
+      - name: ecr-secret
       containers:
-      - name:  task
-        image:  elshahat20/api:latest
+      - name:  ${APP_NAME}
+        image:  $DOCKER_REPO:${IMAGE_TAG}
         resources:
           requests:
             cpu: 100m
@@ -39,11 +41,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name:  task
+  name:  ${APP_NAME}
   namespace: default
 spec:
   selector:
-    app:  task
+    app:  ${APP_NAME}
   ports:
     - name:  http
       protocol: TCP
