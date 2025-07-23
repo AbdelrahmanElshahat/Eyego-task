@@ -28,7 +28,7 @@ pipeline {
             steps {
                script {
                         echo "building the application..."
-                        sh 'npm clean install'
+                        sh 'npm install'
                }
             }
         }
