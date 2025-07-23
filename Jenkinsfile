@@ -59,17 +59,20 @@ pipeline {
                 }
             }
         }
-        /*stage('commit version update') {
+      stage('commit version update') {
             steps {
                 script {
                     echo 'committing version...'
-                    sh 'git config user.name "jenkins"'
-                    sh 'git config user.email "jenkins@example.com"'
-                    sh 'git add package.json'
-                    sh 'git commit -m "Bump version to ${IMAGE_TAG}"'
-                    sh 'git push'
+                    withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
+                        sh 'git config user.name "jenkins"'
+                        sh 'git config user.email "jenkins@example.com"'
+                        sh 'git add package.json'
+                        sh 'git commit -m "Bump version to ${IMAGE_TAG}"'
+                        sh 'git remote set-url origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/AbdelrahmanElshahat/Eyego-task.git'
+                        sh 'git push origin HEAD:main'
+                    }
                 }
             }
-        }*/
+        }
     }
 }
