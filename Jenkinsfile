@@ -66,10 +66,10 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
                         sh 'git config user.name "jenkins"'
                         sh 'git config user.email "jenkins@example.com"'
-                        sh 'git add package.json'
-                        sh 'git commit -m "Bump version to ${IMAGE_TAG}"'
                         sh 'git remote set-url origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/AbdelrahmanElshahat/Eyego-task.git'
                         sh 'git pull --rebase origin main'
+                        sh 'git add package.json'
+                        sh 'git commit -m "Bump version to ${IMAGE_TAG}" || echo "No changes to commit"'
                         sh 'git push origin HEAD:main'
                     }
                 }
