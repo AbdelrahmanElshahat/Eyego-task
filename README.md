@@ -25,7 +25,6 @@ The production environment is built on AWS for high availability, security, and 
 - The `Dockerfile` defines the build process and exposes the required port for the Express API.
 
 ### 2. Kubernetes Deployment (EKS)
-
 - Application deployment and service exposure are managed via Kubernetes manifests (`api.yaml`).
 - Services of type `LoadBalancer` provide secure, external access to the API.
 - Resource requests, limits, and readiness probes are configured for production-grade reliability.
@@ -42,8 +41,15 @@ The production environment is built on AWS for high availability, security, and 
 
 ---
 
-## Migration Steps: EKS to GCP (GKE)
+## Accessing the API
 
+You can access the deployed API using the following URL:
+
+[ApiURL](http://a180860c9697045808b39ade36d3eabe-996605355.eu-north-1.elb.amazonaws.com/)
+
+---
+
+## Migration Steps: EKS to GCP (GKE)
 ### 1. Create a GKE Cluster
 
 ```sh
@@ -55,34 +61,27 @@ gcloud container clusters create eyego-cluster --zone <your-zone> --num-nodes=2
 ```sh
 gcloud container clusters get-credentials eyego-cluster --zone <your-zone>
 ```
-
 ### 3. Push Docker Image to GCR/Artifact Registry
 
 - Update your Jenkins pipeline to build and push to GCR:
 
-```sh
 gcloud auth configure-docker
-
+```
 docker tag eyegotask gcr.io/<your-gcp-project>/eyegotask:${IMAGE_TAG}
 docker push gcr.io/<your-gcp-project>/eyegotask:${IMAGE_TAG}
 ```
 
 ### 4. Update Kubernetes Manifests
+- Change the image reference in your `api.yaml` to use the GCR image
 
-- Change the image reference in your `api.yaml` to use the GCR image:
-
-```yaml
-image: gcr.io/<your-gcp-project>/eyegotask:${IMAGE_TAG}
-```
 
 - GKE will automatically provision a Google Cloud Load Balancer for services of type `LoadBalancer`.
 
-### 6. Apply Manifests to GKE
+### 5. Apply Manifests to GKE
 
 ```sh
 kubectl apply -f kubernetes/api.yaml
 ```
-
 
 ---
 
