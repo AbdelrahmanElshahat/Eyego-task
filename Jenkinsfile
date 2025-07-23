@@ -49,7 +49,7 @@ pipeline {
                 script {
                     echo 'Building the Docker image...'
                     withCredentials([usernamePassword(credentialsId: 'ecr-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh "docker build -f Dockerfile -t eyegotask:${IMAGE_TAG} . "
+                        sh "docker build -t eyegotask:${IMAGE_TAG} . "
                         sh "docker tag eyegotask:${IMAGE_TAG} ${DOCKER_REPO}:${IMAGE_TAG}"
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin ${DOCKER_REPO_SERVER}"
                         sh "docker push ${DOCKER_REPO}:${IMAGE_TAG}"
