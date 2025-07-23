@@ -2,10 +2,6 @@
 
 pipeline {
     agent any
-    tools {
-        NodeJS 'NodeJS 24.4.1'
-    }
-
     stages {
         stage('build app') {
             steps {
