@@ -62,6 +62,7 @@ pipeline {
             steps {
                 script {
                     echo 'committing version...'
+                    sh 'git checkout main'
                     sh 'git add package.json'
                     sh 'git commit -m "Bump version to ${IMAGE_TAG}"'
                     sh 'git push'
