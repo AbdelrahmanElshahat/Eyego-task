@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  ${APP_NAME}
+  name:  $APP_NAME
   namespace: default
   labels:
-    app:  ${APP_NAME}
+    app:  $APP_NAME
 spec:
   selector:
     matchLabels:
-      app: ${APP_NAME}
+      app: $APP_NAME
   replicas: 2
   template:
     metadata:
       labels:
-        app:  ${APP_NAME}
+        app:  $APP_NAME
     spec:
       imagePullSecrets:
       - name: ecr-secret
       containers:
-      - name:  ${APP_NAME}
+      - name:  $APP_NAME
         image:  $DOCKER_REPO:${IMAGE_TAG}
         resources:
           requests:
@@ -41,11 +41,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name:  ${APP_NAME}
+  name:  $APP_NAME
   namespace: default
 spec:
   selector:
-    app:  ${APP_NAME}
+    app:  $APP_NAME
   ports:
     - name:  http
       protocol: TCP
