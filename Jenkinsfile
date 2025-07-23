@@ -16,7 +16,7 @@ pipeline {
                     echo 'increamenting version...'
                     sh 'git config user.name "jenkins"'
                     sh 'git config user.email "jenkins@example.com"'
-                    sh 'npm version patch'
+                    sh 'npm version patch --no-git-tag-version'
                     def packageJson = readJSON file: 'package.json'
                     def version = packageJson.version
                     env.IMAGE_TAG = version
