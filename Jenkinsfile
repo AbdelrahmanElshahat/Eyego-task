@@ -3,9 +3,9 @@
 pipeline {
     agent any
     tools {
-        NodeJS 'nodejs'
+        NodeJS 
     }
-    
+
     stages {
         stage('build app') {
             steps {
