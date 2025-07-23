@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                    echo 'deploying docker image...'
-                   sh 'kubectl create deployment nginx-deployment --image=nginx'
+                   sh 'kubectl apply -f kubernetes/api.yaml'
                 }
             }
         }
