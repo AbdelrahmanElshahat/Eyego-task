@@ -62,6 +62,8 @@ pipeline {
             steps {
                 script {
                     echo 'committing version...'
+                    sh 'git config user.name "jenkins"'
+                    sh 'git config user.email "jenkins@example.com"'
                     sh 'git checkout main'
                     sh 'git add package.json'
                     sh 'git commit -m "Bump version to ${IMAGE_TAG}"'
