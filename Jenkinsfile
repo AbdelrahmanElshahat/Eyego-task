@@ -16,6 +16,7 @@ pipeline {
                     echo 'increamenting version...'
                     sh 'git config user.name "jenkins"'
                     sh 'git config user.email "jenkins@example.com"'
+                    sh 'git checkout main'
                     sh 'npm version patch --no-git-tag-version'
                     def packageJson = readJSON file: 'package.json'
                     def version = packageJson.version
@@ -37,8 +38,8 @@ pipeline {
                 script {
                     echo "building the docker image..."
                     withCredentials([usernamePassword(credentialsId: 'ecr-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh "docker build -t eyegotask . "
-                        sh "docker tag eyegotask:latest ${DOCKER_REPO}:${IMAGE_TAG}"
+                        sh "docker build -t eyegotask:${IMAGE_TAG} . "
+                        sh "docker tag eyegotask:${IMAGE_TAG} ${DOCKER_REPO}:${IMAGE_TAG}"
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin ${DOCKER_REPO_SERVER}"
                         sh "docker push ${DOCKER_REPO}:${IMAGE_TAG}"
                     }
