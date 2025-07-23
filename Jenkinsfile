@@ -14,6 +14,8 @@ pipeline {
             steps {
                 script {
                     echo 'increamenting version...'
+                    sh 'git config user.name "jenkins"'
+                    sh 'git config user.email "jenkins@example.com"'
                     sh 'npm version patch'
                     def packageJson = readJSON file: 'package.json'
                     def version = packageJson.version
@@ -60,8 +62,6 @@ pipeline {
             steps {
                 script {
                     echo 'committing version...'
-                    sh 'git config user.name "jenkins"'
-                    sh 'git config user.email "jenkins@example.com"'
                     sh 'git add package.json'
                     sh 'git commit -m "Bump version to ${IMAGE_TAG}"'
                     sh 'git push'
