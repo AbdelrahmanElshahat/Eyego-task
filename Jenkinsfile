@@ -59,7 +59,7 @@ pipeline {
                 }
             }
         }
-        stage('commit version update') {
+        /*stage('commit version update') {
             steps {
                 script {
                     echo 'committing version...'
@@ -70,6 +70,6 @@ pipeline {
                     sh 'git push'
                 }
             }
-        }
+        }*/
     }
 }
