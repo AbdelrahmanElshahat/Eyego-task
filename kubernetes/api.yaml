@@ -30,12 +30,6 @@ spec:
         ports:
         - containerPort: 3000
           name:  http
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 10
       restartPolicy: Always
 ---
 apiVersion: v1

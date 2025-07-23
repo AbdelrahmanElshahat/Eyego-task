@@ -25,6 +25,7 @@ The production environment is built on AWS for high availability, security, and 
 - The `Dockerfile` defines the build process and exposes the required port for the Express API.
 
 ### 2. Kubernetes Deployment (EKS)
+
 - Application deployment and service exposure are managed via Kubernetes manifests (`api.yaml`).
 - Services of type `LoadBalancer` provide secure, external access to the API.
 - Resource requests, limits, and readiness probes are configured for production-grade reliability.
@@ -72,6 +73,7 @@ docker push gcr.io/<your-gcp-project>/eyegotask:${IMAGE_TAG}
 ```
 
 ### 4. Update Kubernetes Manifests
+
 - Change the image reference in your `api.yaml` to use the GCR image
 
 
@@ -87,4 +89,4 @@ kubectl apply -f kubernetes/api.yaml
 
 ## References
 
-- [Migrating from EKS to GKE](https://cloud.google.com/architecture/migrating-kubernetes-workloads-eks-gke)
+- [Migrating from EKS to GKE](https://cloud.google.com/architecture/migrate-amazon-eks-to-gke)
